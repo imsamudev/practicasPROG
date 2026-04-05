@@ -1,26 +1,26 @@
 import fs from "fs";
 
-async function obtener_personajes(){
-    try{
+async function obtener_personajes() {
+    try {
         const response = await fetch('https://thronesapi.com/api/v2/Characters')
-        if ( !response.ok ) throw new Error("Error al obtener la lista")
+        if (!response.ok) throw new Error("Error al obtener la lista")
         return response.json();
-    }catch(error){
-        console.error( error )
+    } catch (error) {
+        console.error(error)
     }
 }
 
-async function buscar_personaje( id ){
-    try{
+async function buscar_personaje(id) {
+    try {
         const response = await fetch(`https://thronesapi.com/api/v2/Characters/${id}`)
-        if ( !response.ok ) throw new Error("Error al obtener el personaje")
+        if (!response.ok) throw new Error("Error al obtener el personaje")
         return response.json();
-    }catch(error){
-        console.error( error )
+    } catch (error) {
+        console.error(error)
     }
 }
 
-async function agregar_personaje(){
+async function agregar_personaje() {
     try {
         const personaje = {
             'id': 992,
@@ -35,23 +35,23 @@ async function agregar_personaje(){
 
         const response = await fetch("https://thronesapi.com/api/v2/Characters", {
             method: "POST",
-            body: JSON.stringify(personaje), 
+            body: JSON.stringify(personaje),
             headers: {
                 "Content-Type": "application/json",
             },
         })
-        if ( !response.ok ) throw new Error("Error al agregar personaje")
+        if (!response.ok) throw new Error("Error al agregar personaje")
         return response.json();
-    }catch( error ){
+    } catch (error) {
         console.error(error)
     }
-    
+
 }
 
-function guardar_json( json ){
-    try{
+function guardar_json(json) {
+    try {
         const archivo = fs.writeFileSync("personajes.json", json);
-    }catch(error){
+    } catch (error) {
         console.error("Error al escribir el archivo")
     }
 }
@@ -70,5 +70,27 @@ console.log(personaje)
 
 //GUARDAR PERSONAKE EN UN ARCHIVO - 1-d
 const lista_personajes = await obtener_personajes()
-guardar_json( JSON.stringify(lista_personajes, null, 2) )
+guardar_json(JSON.stringify(lista_personajes, null, 2))
 
+
+
+
+
+
+// 2-d Crear un nuevo archivo que solo contenga los: id y nombres de los personajes.
+
+function guardar_nueva_lista(contenido) {
+    try {
+        const archivo = fs.writeFileSync("lista_reducida.json", contenido);
+    } catch (error) {
+        console.error("Error al escribir el archivo")
+    }
+}
+
+const contenido_archivo =
+    lista_personajes.map(personaje => {
+        return { "id": personaje.id, "fullName": personaje.fullName }
+    })
+
+//console.log( contenido_archivo )
+guardar_nueva_lista(JSON.stringify(contenido_archivo, null, 2))
