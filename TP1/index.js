@@ -134,6 +134,46 @@ async function agregar_al_final() {
   }
 }
 
+// 2-b) agregar dos personajes al inicio del archivo
+async function agregar_al_inicio() {
+  try {
+    const personajes = await leer_archivo();
+
+    const personaje1 = {
+      id: generar_id(personajes),
+      firstName: "Juanito",
+      lastName: "Stark",
+      fullName: "Juanito Stark",
+      title: "Guardián del Norte",
+      family: "House Stark",
+      image: "juanito.jpg",
+      imageUrl: "https://thronesapi.com/assets/images/juanito.jpg",
+    };
+
+    const personaje2 = {
+      id: personaje1.id + 1,
+      firstName: "Jacquie",
+      lastName: "Targaryen",
+      fullName: "Jacquie Targaryen",
+      title: "Reina Dragón",
+      family: "House Targaryen",
+      image: "jacquie.jpg",
+      imageUrl: "https://thronesapi.com/assets/images/jacquie.jpg",
+    };
+
+    personajes.unshift(personaje1, personaje2);
+    await guardar_archivo(personajes);
+
+    console.log("2b) Dos personajes agregados al INICIO");
+    console.log("Personaje 1 agregado:", personaje1);
+    console.log("Personaje 2 agregado:", personaje2);
+    console.log(`Total de personajes: ${personajes.length}`);
+  } catch (error) {
+    console.error("Error en agregar_al_inicio:", error.message);
+    throw error;
+  }
+}
+
 // resto de código
 // 2-e) Ordenar los nombres de forma decreciente
 async function ordenar_por_nombre_decreciente() {
@@ -162,6 +202,7 @@ async function main() {
     console.log("  TP1 – API Thrones - Programación III");
 
     await agregar_al_final();
+    await agregar_al_inicio();
     await ordenar_por_nombre_decreciente();
   } catch (error) {
     console.error("Error general en main:", error.message);
