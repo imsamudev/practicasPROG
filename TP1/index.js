@@ -62,8 +62,8 @@ const personajes = await obtener_personajes();
 console.log(personajes);
 
 // AGREGAR PESONAJE - 1-b
-//const nuevo_personaje = await agregar_personaje();
-//console.log(nuevo_personaje)
+const nuevo_personaje = await agregar_personaje();
+console.log(nuevo_personaje);
 
 //BUSCAR PERSONAJE - 1-c
 const personaje = await buscar_personaje(52);
@@ -174,7 +174,46 @@ async function agregar_al_inicio() {
   }
 }
 
-// resto de código
+// 2-c) Eliminar el primer personaje, mostrar en consola el elemento eliminado
+async function eliminar_primer_personaje() {
+  try {
+    const personajes = await leer_archivo();
+
+    const eliminado = personajes.shift();
+    await guardar_archivo(personajes);
+
+    console.log("2c) Primer personaje ELIMINADO:", eliminado);
+    console.log(`Total de personajes restantes: ${personajes.length}`);
+    return eliminado;
+  } catch (error) {
+    console.error("Error en eliminar_primer_personaje:", error.message);
+    throw error;
+  }
+}
+
+// 2-d) Crear un nuevo archivo que solo contenga id y fullName de cada personaje
+async function guardar_nueva_lista() {
+  try {
+    const personajes = await leer_archivo();
+
+    const contenido = personajes.map((personaje) => ({
+      id: personaje.id,
+      fullName: personaje.fullName,
+    }));
+
+    await fs.writeFile(
+      ARCHIVO_NOMBRES,
+      JSON.stringify(contenido, null, 2),
+      "utf-8",
+    );
+
+    console.log("2d) Lista reducida (id + fullName) guardada en archivo");
+    console.log("Primeros 3:", contenido.slice(0, 3));
+  } catch (error) {
+    console.error("Error en guardar_nueva_lista:", error.message);
+    throw error;
+  }
+}
 // 2-e) Ordenar los nombres de forma decreciente
 async function ordenar_por_nombre_decreciente() {
   try {
@@ -194,7 +233,6 @@ async function ordenar_por_nombre_decreciente() {
     throw error;
   }
 }
-//resto de codigo
 
 // consola parcial
 async function main() {
@@ -203,6 +241,8 @@ async function main() {
 
     await agregar_al_final();
     await agregar_al_inicio();
+    await eliminar_primer_personaje();
+    await guardar_nueva_lista();
     await ordenar_por_nombre_decreciente();
   } catch (error) {
     console.error("Error general en main:", error.message);
