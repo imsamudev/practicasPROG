@@ -1,0 +1,18 @@
+[
+  {
+    "id": 101,
+    "firstName": "Juanito",
+    "lastName": "Stark",
+    "fullName": "Juanito Stark",
+    "title": "Guardián del Norte",
+    "family": "Stark"
+  },
+  {
+    "id": 102,
+    "firstName": "Jacquie",
+    "lastName": "Targaryen",
+    "fullName": "Jacquie Targaryen",
+    "title": "Reina Dragón",
+    "family": "Targaryen"
+  }
+]
