@@ -15,6 +15,7 @@ async function obtener_personajes() {
 
 async function buscar_personaje(id) {
   try {
+    console.log(`Ejecutando el GET a: https://thronesapi.com/api/v2/Characters/${id}`)
     const response = await fetch(
       `https://thronesapi.com/api/v2/Characters/${id}`,
     );
@@ -60,20 +61,27 @@ async function guardar_json(json) {
   }
 }
 
+console.log( "##### API Fecth – File System – API Thrones - Programación III #####" )
 // LISTAR PERSONAJES - 1-a
+console.log("1-a Recuperar la información de todos los personajes (GET)")
 const personajes = await obtener_personajes();
-console.log(personajes);
+console.log("Lista guardada en constante personajes")
+//console.log(personajes);
 
 // AGREGAR PERSONAJE - 1-b
+console.log("1-b Agregar un nuevo personaje (POST). (Teorico, la API no permite agregar con POST)")
 const nuevo_personaje = await agregar_personaje();
 console.log(nuevo_personaje);
 
 //BUSCAR PERSONAJE - 1-c
+console.log("1-c Buscar la información de un determinado personaje, utilizando un “id” como parámetro (GET).")
 const personaje = await buscar_personaje(52);
 console.log(personaje);
 
-//GUARDAR PERSONAJES EN UN ARCHIVO - 1-d (reutiliza el resultado de 1-a)
+//GUARDAR PERSONAJES EN UN ARCHIVO - 1-d 
+console.log("1-d Persistir los datos de la primer consulta en un archivo local JSON. (reutiliza el resultado de 1-a)")
 await guardar_json(JSON.stringify(personajes, null, 2));
+console.log(`Personajes guardados como ${ARCHIVO_PERSONAJES}`);
 
 // función de utilidad para leer json local
 async function leer_archivo() {
@@ -237,7 +245,7 @@ async function ordenar_por_nombre_decreciente() {
 
 async function main() {
   try {
-    console.log("  TP1 – API Thrones - Programación III");
+    console.log("##### Métodos comunes y avanzados – File System – API Thrones - Programación III #####");
 
     await agregar_al_final();
     await agregar_al_inicio();
