@@ -1,10 +1,13 @@
-import fs from "fs";
+import fs from "fs/promises";
+
+const ARCHIVO_PERSONAJES = "personajes.json";
+const ARCHIVO_NOMBRES = "personajes_nombres.json";
 
 async function obtener_personajes() {
   try {
     const response = await fetch("https://thronesapi.com/api/v2/Characters");
     if (!response.ok) throw new Error("Error al obtener la lista");
-    return response.json();
+    return await response.json();
   } catch (error) {
     console.error(error);
   }
@@ -16,7 +19,7 @@ async function buscar_personaje(id) {
       `https://thronesapi.com/api/v2/Characters/${id}`,
     );
     if (!response.ok) throw new Error("Error al obtener el personaje");
-    return response.json();
+    return await response.json();
   } catch (error) {
     console.error(error);
   }
@@ -42,16 +45,16 @@ async function agregar_personaje() {
         "Content-Type": "application/json",
       },
     });
-    if (!response.ok) throw new Error("Error al agregar personaje");
-    return response.json();
+    console.log(`Estado POST: ${response.status} ${response.statusText}`);
+    return personaje;
   } catch (error) {
     console.error(error);
   }
 }
 
-function guardar_json(json) {
+async function guardar_json(json) {
   try {
-    const archivo = fs.writeFileSync("personajes.json", json);
+    await fs.writeFile(ARCHIVO_PERSONAJES, json, "utf-8");
   } catch (error) {
     console.error("Error al escribir el archivo");
   }
@@ -61,7 +64,7 @@ function guardar_json(json) {
 const personajes = await obtener_personajes();
 console.log(personajes);
 
-// AGREGAR PESONAJE - 1-b
+// AGREGAR PERSONAJE - 1-b
 const nuevo_personaje = await agregar_personaje();
 console.log(nuevo_personaje);
 
@@ -69,11 +72,9 @@ console.log(nuevo_personaje);
 const personaje = await buscar_personaje(52);
 console.log(personaje);
 
-//GUARDAR PERSONAKE EN UN ARCHIVO - 1-d
-const lista_personajes = await obtener_personajes();
-guardar_json(JSON.stringify(lista_personajes, null, 2));
+//GUARDAR PERSONAJES EN UN ARCHIVO - 1-d (reutiliza el resultado de 1-a)
+await guardar_json(JSON.stringify(personajes, null, 2));
 
-// resto de código
 // función de utilidad para leer json local
 async function leer_archivo() {
   try {
@@ -85,7 +86,7 @@ async function leer_archivo() {
     throw error;
   }
 }
-// guardar array actualizado en el archivo json local
+// función de utilidad para guardar array actualizado en el archivo json local
 async function guardar_archivo(personajes) {
   try {
     await fs.writeFile(
@@ -99,14 +100,13 @@ async function guardar_archivo(personajes) {
   }
 }
 
-// se genera un id unico que se basa en el máximo id existente
+// función de utilidad: genera un id único basado en el máximo id existente
 function generar_id(personajes) {
   if (personajes.length === 0) return 1;
   return Math.max(...personajes.map((p) => p.id)) + 1;
 }
 
 // 2-a) agregar un personaje al final del archivo
-
 async function agregar_al_final() {
   try {
     const personajes = await leer_archivo();
@@ -214,6 +214,7 @@ async function guardar_nueva_lista() {
     throw error;
   }
 }
+
 // 2-e) Ordenar los nombres de forma decreciente
 async function ordenar_por_nombre_decreciente() {
   try {
@@ -234,7 +235,6 @@ async function ordenar_por_nombre_decreciente() {
   }
 }
 
-// consola parcial
 async function main() {
   try {
     console.log("  TP1 – API Thrones - Programación III");
